@@ -1,9 +1,21 @@
-import OpenAI from "openai";
+const openai = {
+  chat: {
+    completions: {
+      create: async ({ model, messages }) => {
+        const response = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ model, messages }),
+        });
 
-const openai = new OpenAI({
-  apiKey: import.meta.env.VITE_OPENROUTER_API_KEY,
-  baseURL: "https://openrouter.ai/api/v1",
-  dangerouslyAllowBrowser: true,
-});
+        if (!response.ok) {
+          throw new Error("AI request failed");
+        }
+
+        return response.json();
+      },
+    },
+  },
+};
 
 export default openai;
